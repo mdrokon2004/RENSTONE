@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Search, Heart, ShoppingBag, Menu, Shield, ArrowRight } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
@@ -52,27 +52,13 @@ export const Header: React.FC = () => {
               </button>
             </div>
 
-            {/* Brand Logo & Wordmark */}
-            <Link to="/" className="flex items-center gap-2.5 group">
-              {/* Gemstone Geometric Minimalist Symbol */}
-              <div className="w-8 h-8 rounded bg-gradient-to-br from-champagne via-champagne-light to-champagne-dark p-[1px] flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
-                <div className="w-full h-full bg-obsidian-pure rounded-[3px] flex items-center justify-center">
-                  <svg className="w-4 h-4 text-champagne" viewBox="0 0 24 24" fill="currentColor">
-                    <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5" />
-                    <line x1="12" y1="2" x2="12" y2="22" stroke="#111111" strokeWidth="1" />
-                    <line x1="2" y1="8.5" x2="22" y2="15.5" stroke="#111111" strokeWidth="1" />
-                  </svg>
-                </div>
-              </div>
-
-              <div className="flex flex-col">
-                <span className="font-display tracking-[0.22em] text-xl font-bold uppercase text-ivory group-hover:text-champagne transition-colors">
-                  RENSTONE
-                </span>
-                <span className="text-[9px] uppercase tracking-[0.3em] text-champagne font-medium -mt-1 hidden sm:block">
-                  Timeless Style
-                </span>
-              </div>
+            {/* Official RENSTONE Logo */}
+            <Link to="/" className="flex items-center gap-3 group">
+              <img
+                src="/renstone-logo.png"
+                alt="RENSTONE Fashion Accessories"
+                className="h-10 sm:h-12 w-auto object-contain rounded border border-champagne/40 shadow-sm transition-transform duration-300 group-hover:scale-105"
+              />
             </Link>
 
             {/* Desktop Navigation */}
@@ -100,6 +86,20 @@ export const Header: React.FC = () => {
 
             {/* Right Action Icons */}
             <div className="flex items-center gap-3 sm:gap-4">
+              {/* Official Facebook Page Link */}
+              <a
+                href="https://www.facebook.com/profile.php?id=61594618265976"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 text-ivory/80 hover:text-[#1877F2] transition-colors"
+                title="Follow RENSTONE on Facebook"
+                aria-label="Facebook Page"
+              >
+                <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+              </a>
+
               {/* Search Toggle */}
               <button
                 onClick={() => setIsSearchOpen(true)}

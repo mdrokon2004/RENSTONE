@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, Package, Tag, ShoppingCart, Settings, LogOut, 
@@ -54,14 +54,15 @@ export const AdminLayout: React.FC = () => {
       >
         <div>
           {/* Logo */}
-          <div className="p-6 border-b border-white/10 hidden lg:block">
-            <Link to="/admin" className="flex items-center gap-2">
-              <Shield className="w-5 h-5 text-champagne" />
+          <div className="p-5 border-b border-white/10 hidden lg:block">
+            <Link to="/admin" className="flex items-center gap-3">
+              <img
+                src="/renstone-logo.png"
+                alt="RENSTONE Logo"
+                className="h-10 w-auto object-contain rounded border border-champagne/40"
+              />
               <div className="flex flex-col">
-                <span className="font-display uppercase font-bold text-base tracking-widest text-ivory">
-                  RENSTONE
-                </span>
-                <span className="text-[9px] uppercase tracking-widest text-champagne">
+                <span className="text-[10px] uppercase tracking-widest text-champagne font-bold">
                   Control Center
                 </span>
               </div>

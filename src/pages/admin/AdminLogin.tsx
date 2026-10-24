@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Shield, Lock, Mail, ArrowRight, Database } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
@@ -31,15 +31,17 @@ export const AdminLogin: React.FC = () => {
   return (
     <div className="min-h-screen bg-obsidian-pure text-ivory flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-obsidian-surface rounded-lg p-8 border border-champagne/30 shadow-2xl space-y-6">
-        <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-full bg-champagne/10 border border-champagne/40 flex items-center justify-center mx-auto text-champagne">
-            <Shield className="w-6 h-6" />
-          </div>
-          <h1 className="font-display text-2xl font-bold uppercase tracking-widest text-ivory">
-            RENSTONE Admin
+        <div className="text-center space-y-3">
+          <img
+            src="/renstone-logo.png"
+            alt="RENSTONE Logo"
+            className="h-16 w-auto object-contain mx-auto rounded border border-champagne/40 shadow-md"
+          />
+          <h1 className="font-display text-xl font-bold uppercase tracking-widest text-champagne">
+            Control Center
           </h1>
           <p className="text-xs text-ivory/60">
-            Sign in to manage catalog, inventory, orders, and store settings.
+            Sign in to manage catalog, live inventory, orders, and store settings.
           </p>
         </div>
 

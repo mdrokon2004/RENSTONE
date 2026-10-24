@@ -31,6 +31,9 @@ interface StoreContextType {
   updateOrderStatus: (orderId: string, status: OrderStatus, internalNotes?: string) => Promise<void>;
   // Settings
   updateSettings: (newSettings: Partial<StoreSettings>) => Promise<void>;
+  trackProductView: (productId: string) => number;
+  getProductViews: (productId: string) => number;
+  getProductSalesCount: (productId: string) => number;
 }
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
@@ -40,6 +43,7 @@ const LOCAL_STORAGE_CATEGORIES = 'renstone_categories';
 const LOCAL_STORAGE_ORDERS = 'renstone_orders';
 const LOCAL_STORAGE_SETTINGS = 'renstone_settings';
 const LOCAL_STORAGE_ADMIN_AUTH = 'renstone_admin_auth';
+const LOCAL_STORAGE_VIEWS = 'renstone_product_views';
 
 export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -513,6 +517,46 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     localStorage.setItem(LOCAL_STORAGE_SETTINGS, JSON.stringify(updated));
   }
 
+  // Real view tracking without fake numbers
+  const [productViews, setProductViews] = useState<Record<string, number>>(() => {
+    try {
+      const saved = localStorage.getItem('renstone_product_views');
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  const trackProductView = (productId: string): number => {
+    const current = productViews[productId] || 0;
+    const updated = current + 1;
+    const newViews = { ...productViews, [productId]: updated };
+    setProductViews(newViews);
+    try {
+      localStorage.setItem('renstone_product_views', JSON.stringify(newViews));
+    } catch (e) {
+      console.error(e);
+    }
+    return updated;
+  };
+
+  const getProductViews = (productId: string): number => {
+    return productViews[productId] || 1;
+  };
+
+  const getProductSalesCount = (productId: string): number => {
+    const prod = products.find(p => p.id === productId);
+    if (prod && typeof prod.verifiedSalesCount === 'number') {
+      return prod.verifiedSalesCount;
+    }
+    return orders
+      .filter(o => o.status !== 'Cancelled')
+      .reduce((sum, ord) => {
+        const matchingItem = ord.items.find(i => i.productId === productId);
+        return sum + (matchingItem ? matchingItem.quantity : 0);
+      }, 0);
+  };
+
   return (
     <StoreContext.Provider value={{
       products,
@@ -535,7 +579,10 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       deleteCategory,
       createOrder,
       updateOrderStatus,
-      updateSettings
+      updateSettings,
+      trackProductView,
+      getProductViews,
+      getProductSalesCount
     }}>
       {children}
     </StoreContext.Provider>

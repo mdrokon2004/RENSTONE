@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import { StoreProvider } from './context/StoreContext';
 import { CartProvider } from './context/CartContext';
@@ -9,6 +9,7 @@ import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
 import { AnnouncementBar } from './components/layout/AnnouncementBar';
 import { CartDrawer } from './components/cart/CartDrawer';
+import { FloatingWhatsApp } from './components/ui/FloatingWhatsApp';
 
 // Public Pages
 import { Home } from './pages/Home';
@@ -42,6 +43,7 @@ const PublicLayout: React.FC = () => {
       </main>
       <Footer />
       <CartDrawer />
+      <FloatingWhatsApp />
     </div>
   );
 };

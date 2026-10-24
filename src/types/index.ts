@@ -1,4 +1,4 @@
-﻿export interface Category {
+export interface Category {
   id: string;
   slug: string;
   name: string;
@@ -9,11 +9,11 @@
 
 export interface ProductVariantOption {
   id: string;
-  name: string; // e.g. "Size 10 / Champagne Gold" or "Midnight Leather Strap"
+  name: string;
   sku: string;
-  priceModifier?: number; // add or subtract from base price
+  priceModifier?: number;
   stockQuantity: number;
-  attributes: Record<string, string>; // { size: '10', finish: 'Gold' }
+  attributes: Record<string, string>;
 }
 
 export interface ProductSpecification {
@@ -25,11 +25,11 @@ export interface Product {
   id: string;
   slug: string;
   name: string;
-  category: string; // matches Category slug (e.g. 'watches', 'pendants', 'rings', 'bracelets', 'chains')
+  category: string;
   description: string;
   highlights: string[];
-  price: number; // In BDT
-  compareAtPrice?: number; // In BDT (optional)
+  price: number;
+  compareAtPrice?: number;
   images: string[];
   variants: ProductVariantOption[];
   stockQuantity: number;
@@ -39,12 +39,14 @@ export interface Product {
   specifications: ProductSpecification[];
   careInstructions?: string;
   warranty?: string;
+  viewCount?: number;
+  verifiedSalesCount?: number;
   createdAt: string;
   updatedAt?: string;
 }
 
 export interface CartItem {
-  id: string; // unique item id = productId + (variantId || '')
+  id: string;
   productId: string;
   product: Product;
   selectedVariant?: ProductVariantOption;
@@ -72,12 +74,12 @@ export interface OrderItem {
 
 export interface Order {
   id: string;
-  orderReference: string; // e.g., REN-2026-7841
+  orderReference: string;
   customerName: string;
   customerPhone: string;
-  district: string; // "Dhaka" or "Outside Dhaka"
-  area: string; // Thana or specific area
-  address: string; // Full delivery address
+  district: string;
+  area: string;
+  address: string;
   notes?: string;
   preferredChannel: 'whatsapp' | 'messenger';
   items: OrderItem[];
@@ -93,8 +95,9 @@ export interface Order {
 export interface StoreSettings {
   storeName: string;
   tagline: string;
-  whatsappNumber: string; // E.g. 8801700000000 (international without +)
-  messengerUrl: string; // E.g. https://m.me/renstone.bd
+  whatsappNumber: string;
+  messengerUrl: string;
+  facebookUrl?: string;
   dhakaDeliveryFee: number;
   outsideDhakaDeliveryFee: number;
   freeDeliveryThreshold: number;

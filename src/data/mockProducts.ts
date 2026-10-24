@@ -47,13 +47,14 @@ export const INITIAL_STORE_SETTINGS: StoreSettings = {
   storeName: 'RENSTONE',
   tagline: 'Timeless Style. Distinctive Details.',
   whatsappNumber: '8801322177107', // Official RENSTONE WhatsApp Concierge
-  messengerUrl: 'https://m.me/renstone.official',
+  messengerUrl: 'https://www.facebook.com/profile.php?id=61594618265976',
   dhakaDeliveryFee: 80,
   outsideDhakaDeliveryFee: 150,
   freeDeliveryThreshold: 5000,
   announcementText: 'Complimentary Express Shipping on orders over ৳5,000 across Bangladesh',
   announcementEnabled: true,
-  contactEmail: '',
+  contactEmail: 'renstoneofficialbd@gmail.com',
+  facebookUrl: 'https://www.facebook.com/profile.php?id=61594618265976',
   contactPhone: '+880 1322-177107',
   contactAddress: 'Dhaka, Bangladesh (100% Online Exclusive Boutique)'
 };
