@@ -52,8 +52,8 @@ export const Header: React.FC = () => {
               </button>
             </div>
 
-            {/* Official RENSTONE Logo */}
-            <Link to="/" className="flex items-center gap-3 group">
+            {/* Official RENSTONE Logo with generous luxury spacing */}
+            <Link to="/" className="flex items-center gap-3 group mr-8 lg:mr-12 xl:mr-16">
               <img
                 src="/renstone-logo.png"
                 alt="RENSTONE Fashion Accessories"
@@ -62,7 +62,7 @@ export const Header: React.FC = () => {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-7">
+            <nav className="hidden lg:flex items-center gap-7 xl:gap-9">
               {navLinks.map((link) => {
                 const isActive = location.pathname === link.path;
                 return (

@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Eye, TrendingUp, ShieldCheck } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 
@@ -34,7 +34,7 @@ export const LiveVisitorBadge: React.FC<LiveVisitorBadgeProps> = ({ productId })
           </span>
 
           <span className="font-semibold text-ivory text-xs sm:text-sm">
-            <span className="text-champagne font-bold">{viewCount} {viewCount === 1 ? 'visit' : 'visits'}</span> recorded on this link
+            <span className="text-champagne font-bold">{viewCount}</span> {viewCount === 1 ? 'person' : 'people'} watching this product
           </span>
         </div>
 
