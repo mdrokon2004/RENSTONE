@@ -137,14 +137,14 @@ export const Header: React.FC = () => {
                 )}
               </button>
 
-              {/* Admin Portal Shortcut Button */}
+              {/* Admin Portal Shortcut Button - Always visible on desktop, laptops, tablets */}
               <Link
                 to="/admin"
-                className="hidden xl:flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-ivory/60 hover:text-champagne border border-white/10 hover:border-champagne/40 px-2.5 py-1.5 rounded transition-all"
-                title="Secure Admin Portal"
+                className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-ivory/80 hover:text-champagne border border-champagne/40 hover:border-champagne px-2.5 py-1.5 rounded transition-all bg-obsidian-surface/60"
+                title="Access Secure Admin Portal"
               >
                 <Shield className="w-3.5 h-3.5 text-champagne" />
-                <span>Admin</span>
+                <span className="font-semibold text-champagne">Admin</span>
               </Link>
             </div>
           </div>

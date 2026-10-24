@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { 
   LayoutDashboard, Package, Tag, ShoppingCart, Settings, LogOut, 
   ExternalLink, Shield, Database, CheckCircle2, AlertCircle, Menu, X 
@@ -9,12 +9,22 @@ import { useStore } from '../../context/StoreContext';
 export const AdminLayout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { isCloudConnected, isAdminAuthenticated, adminEmail, logoutAdmin } = useStore();
+  const { isCloudConnected, isAdminAuthenticated, adminEmail, logoutAdmin, isLoading } = useStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-obsidian-pure flex items-center justify-center text-champagne p-4">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-2 border-champagne border-t-transparent rounded-full animate-spin" />
+          <span className="text-xs uppercase tracking-widest font-semibold">Loading Control Center...</span>
+        </div>
+      </div>
+    );
+  }
+
   if (!isAdminAuthenticated) {
-    navigate('/admin/login');
-    return null;
+    return <Navigate to="/admin/login" state={{ from: location }} replace />;
   }
 
   const navItems = [
