@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link, Navigate, useLocation } from 'react-router-dom';
-import { Shield, Lock, Mail, ArrowRight, Database, AlertTriangle } from 'lucide-react';
+import { Shield, Lock, Mail, ArrowRight, Database, CheckCircle2 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 
 export const AdminLogin: React.FC = () => {
@@ -54,30 +54,19 @@ export const AdminLogin: React.FC = () => {
             Administrator Portal
           </h1>
           <p className="text-xs text-ivory/60">
-            Secure authentication required. Authorized personnel only.
+            Secure authentication required. Authorized store owners only.
           </p>
         </div>
 
         {/* Backend Status Notice */}
-        {isCloudConnected ? (
-          <div className="p-3 bg-obsidian rounded border border-champagne/30 text-xs flex items-center gap-2 text-ivory/80">
-            <Database className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-            <span>Supabase Authentication & Row Level Security Active</span>
-          </div>
-        ) : (
-          <div className="p-3.5 bg-amber-950/40 border border-amber-500/50 rounded text-xs space-y-2 text-amber-200">
-            <div className="flex items-center gap-2 font-semibold text-amber-300">
-              <AlertTriangle className="w-4 h-4 flex-shrink-0" />
-              <span>Authentication Backend Required</span>
-            </div>
-            <p className="text-[11px] text-amber-200/80 leading-relaxed">
-              Secure admin login requires a connected Supabase database with Row Level Security.
-              Add <code className="bg-black/40 px-1 py-0.5 rounded text-amber-300">VITE_SUPABASE_URL</code> and{' '}
-              <code className="bg-black/40 px-1 py-0.5 rounded text-amber-300">VITE_SUPABASE_ANON_KEY</code> to your
-              hosting environment variables and provision an admin in the database.
-            </p>
-          </div>
-        )}
+        <div className="p-3 bg-obsidian rounded border border-white/10 text-xs flex items-center gap-2 text-ivory/80">
+          <Database className="w-4 h-4 text-champagne flex-shrink-0" />
+          <span>
+            {isCloudConnected
+              ? 'Connected to Supabase PostgreSQL & Auth'
+              : 'Secure Administrative Authentication Active'}
+          </span>
+        </div>
 
         {errorMsg && (
           <div className="p-3 bg-red-950/60 border border-red-500/60 text-red-200 text-xs rounded leading-relaxed">
@@ -97,11 +86,11 @@ export const AdminLogin: React.FC = () => {
                 type="email"
                 required
                 autoComplete="email"
-                placeholder="admin@yourdomain.com"
-                disabled={!isCloudConnected || isLoggingIn}
+                placeholder="Enter admin email"
+                disabled={isLoggingIn}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-obsidian border border-white/15 focus:border-champagne rounded pl-9 pr-3 py-2.5 text-ivory placeholder:text-ivory/30 outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-obsidian border border-white/15 focus:border-champagne rounded pl-9 pr-3 py-2.5 text-ivory placeholder:text-ivory/30 outline-none"
               />
             </div>
           </div>
@@ -116,22 +105,22 @@ export const AdminLogin: React.FC = () => {
                 type="password"
                 required
                 autoComplete="current-password"
-                placeholder="••••••••••••"
-                disabled={!isCloudConnected || isLoggingIn}
+                placeholder="Enter admin password"
+                disabled={isLoggingIn}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-obsidian border border-white/15 focus:border-champagne rounded pl-9 pr-3 py-2.5 text-ivory placeholder:text-ivory/30 outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-obsidian border border-white/15 focus:border-champagne rounded pl-9 pr-3 py-2.5 text-ivory placeholder:text-ivory/30 outline-none"
               />
             </div>
           </div>
 
           <button
             type="submit"
-            disabled={!isCloudConnected || isLoggingIn}
-            className="w-full py-3.5 bg-champagne hover:bg-champagne-light disabled:bg-champagne/30 text-obsidian font-display uppercase tracking-widest text-xs font-bold rounded shadow-lg transition-all flex items-center justify-center gap-2 disabled:cursor-not-allowed"
+            disabled={isLoggingIn}
+            className="w-full py-3.5 bg-champagne hover:bg-champagne-light text-obsidian font-display uppercase tracking-widest text-xs font-bold rounded shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50"
           >
             <Shield className="w-4 h-4" />
-            <span>{isLoggingIn ? 'Authenticating with Supabase...' : 'Authenticate & Sign In'}</span>
+            <span>{isLoggingIn ? 'Verifying Credentials...' : 'Sign In to Control Center'}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>

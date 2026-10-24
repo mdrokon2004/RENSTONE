@@ -10,9 +10,6 @@
 - **Live Public Website**: [https://renstone.vercel.app](https://renstone.vercel.app)
 - **GitHub Repository**: [https://github.com/mdrokon2004/RENSTONE](https://github.com/mdrokon2004/RENSTONE)
 - **Administrator Portal**: [https://renstone.vercel.app/admin/login](https://renstone.vercel.app/admin/login)
-- **Official WhatsApp Concierge**: [+880 1322-177107](https://wa.me/8801322177107)
-- **Official Facebook Page**: [facebook.com/profile.php?id=61594618265976](https://www.facebook.com/profile.php?id=61594618265976)
-- **Official Email**: `renstoneofficialbd@gmail.com`
 
 ---
 
@@ -22,7 +19,7 @@
 - **Reference-Grade Product Details**: Multi-angle photography gallery with fullscreen lightbox zoom, variant selector (sizes, finishes), real-time stock checks, and technical specifications accordion.
 - **100% Genuine Activity Counter**: Live visitor indicator (`"N person watching this product"`) based strictly on genuine page visits. Order counts reflect only verified database orders.
 - **Seamless Bangladesh Ordering Flow**:
-  - Direct WhatsApp Concierge ordering (`https://wa.me/8801322177107`) with pre-encoded product title, variant, delivery address, and reference code.
+  - Direct WhatsApp Concierge ordering with pre-encoded product title, variant, delivery address, and reference code.
   - Floating WhatsApp chat widget for instant customer support.
   - Automated shipping rates: Inside Dhaka (৳80) vs. Outside Dhaka (৳150), and complimentary express delivery on orders over ৳5,000.
   - Cash on Delivery (COD) standard with doorstep inspection notices.
