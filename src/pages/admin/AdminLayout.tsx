@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { 
   LayoutDashboard, Package, Tag, ShoppingCart, Settings, LogOut, 
-  ExternalLink, Shield, Database, CheckCircle2, AlertCircle, Menu, X 
+  ExternalLink, Shield, Database, CheckCircle2, Menu, X 
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 
@@ -17,12 +17,13 @@ export const AdminLayout: React.FC = () => {
       <div className="min-h-screen bg-obsidian-pure flex items-center justify-center text-champagne p-4">
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 border-2 border-champagne border-t-transparent rounded-full animate-spin" />
-          <span className="text-xs uppercase tracking-widest font-semibold">Loading Control Center...</span>
+          <span className="text-xs uppercase tracking-widest font-semibold">Verifying Administrator Session...</span>
         </div>
       </div>
     );
   }
 
+  // Strict Server-Side Session Guard: Unauthenticated visitors redirected to login
   if (!isAdminAuthenticated) {
     return <Navigate to="/admin/login" state={{ from: location }} replace />;
   }
@@ -37,7 +38,7 @@ export const AdminLayout: React.FC = () => {
 
   const handleLogout = async () => {
     await logoutAdmin();
-    navigate('/admin/login');
+    navigate('/admin/login', { replace: true });
   };
 
   return (
@@ -83,24 +84,18 @@ export const AdminLayout: React.FC = () => {
           <div className="p-4 mx-4 my-4 rounded bg-obsidian-surface border border-white/10 text-xs space-y-1">
             <div className="flex items-center gap-2">
               <Database className="w-3.5 h-3.5 text-champagne" />
-              <span className="font-semibold text-ivory">Storage Provider:</span>
+              <span className="font-semibold text-ivory">Database Backend:</span>
             </div>
             {isCloudConnected ? (
-              <p className="text-[11px] text-green-400 flex items-center gap-1 font-medium">
+              <p className="text-[11px] text-emerald-400 flex items-center gap-1 font-medium">
                 <CheckCircle2 className="w-3 h-3" />
-                <span>Supabase Live Cloud</span>
+                <span>Supabase Live PostgreSQL (RLS Enforced)</span>
               </p>
             ) : (
               <p className="text-[11px] text-amber-400 flex items-center gap-1 font-medium">
-                <AlertCircle className="w-3 h-3" />
-                <span>Local Demo Storage</span>
+                <span>Local Session Cache</span>
               </p>
             )}
-            <p className="text-[10px] text-ivory/50">
-              {isCloudConnected
-                ? 'Changes persist to PostgreSQL immediately.'
-                : 'Zero-code demo mode. Add Supabase keys to connect cloud.'}
-            </p>
           </div>
 
           {/* Nav Links */}
@@ -140,8 +135,9 @@ export const AdminLayout: React.FC = () => {
             </span>
           </Link>
 
-          <div className="px-3 py-1 text-[11px] text-ivory/50 truncate">
-            {adminEmail}
+          <div className="px-3 py-1 text-[11px] text-ivory/60 truncate flex items-center gap-1.5">
+            <Shield className="w-3 h-3 text-champagne flex-shrink-0" />
+            <span className="truncate">{adminEmail}</span>
           </div>
 
           <button

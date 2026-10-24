@@ -42,8 +42,6 @@ const LOCAL_STORAGE_PRODUCTS = 'renstone_products';
 const LOCAL_STORAGE_CATEGORIES = 'renstone_categories';
 const LOCAL_STORAGE_ORDERS = 'renstone_orders';
 const LOCAL_STORAGE_SETTINGS = 'renstone_settings';
-const LOCAL_STORAGE_ADMIN_AUTH = 'renstone_admin_auth';
-const LOCAL_STORAGE_VIEWS = 'renstone_product_views';
 
 export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -54,31 +52,50 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(false);
   const [adminEmail, setAdminEmail] = useState<string | null>(null);
 
-  // Initialize Data
+  // Initialize Data & Strictly Verify Server-Side Auth Session
   useEffect(() => {
     async function loadInitialData() {
       setIsLoading(true);
 
-      // Check Admin Auth session
+      // Verify Admin Auth strictly via Supabase Authentication & Admin Table
       if (isSupabaseConfigured && supabase) {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-          setIsAdminAuthenticated(true);
-          setAdminEmail(session.user.email || 'Admin');
+        try {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session && session.user) {
+            // Verify that this user ID exists in public.admin_users
+            const { data: adminRow } = await supabase
+              .from('admin_users')
+              .select('role')
+              .eq('id', session.user.id)
+              .single();
+
+            if (adminRow && (adminRow.role === 'admin' || adminRow.role === 'superadmin')) {
+              setIsAdminAuthenticated(true);
+              setAdminEmail(session.user.email || 'Administrator');
+            } else {
+              // Authenticated user lacks admin role
+              await supabase.auth.signOut();
+              setIsAdminAuthenticated(false);
+              setAdminEmail(null);
+            }
+          } else {
+            setIsAdminAuthenticated(false);
+            setAdminEmail(null);
+          }
+        } catch (err) {
+          console.warn('Session verification error:', err);
+          setIsAdminAuthenticated(false);
+          setAdminEmail(null);
         }
       } else {
-        const storedAuth = localStorage.getItem(LOCAL_STORAGE_ADMIN_AUTH);
-        if (storedAuth) {
-          const authObj = JSON.parse(storedAuth);
-          setIsAdminAuthenticated(authObj.isAuth);
-          setAdminEmail(authObj.email);
-        }
+        // Without Supabase credentials, admin access is strictly disabled
+        setIsAdminAuthenticated(false);
+        setAdminEmail(null);
       }
 
       // Load Store Data
       if (isSupabaseConfigured && supabase) {
         try {
-          // Fetch from Supabase
           const { data: prodsData, error: prodsErr } = await supabase.from('products').select('*');
           const { data: catsData, error: catsErr } = await supabase.from('categories').select('*');
           const { data: setsData } = await supabase.from('store_settings').select('*').single();
@@ -117,7 +134,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             setOrders(ordsData.map(mapSupabaseOrder));
           }
         } catch (err) {
-          console.warn('Falling back to local data due to Supabase fetch error:', err);
+          console.warn('Falling back to local catalog due to fetch error:', err);
           loadLocalFallback();
         }
       } else {
@@ -139,20 +156,10 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setProducts(savedProds ? JSON.parse(savedProds) : INITIAL_PRODUCTS);
     setCategories(savedCats ? JSON.parse(savedCats) : INITIAL_CATEGORIES);
     setOrders(savedOrders ? JSON.parse(savedOrders) : []);
-        if (savedSettings) {
-      const parsed = JSON.parse(savedSettings);
-      // Ensure real WhatsApp number and online store address are applied
-      parsed.whatsappNumber = '8801322177107';
-      parsed.contactPhone = '+880 1322-177107';
-      parsed.contactAddress = 'Dhaka, Bangladesh (100% Online Exclusive Boutique)';
-      parsed.contactEmail = '';
-      setSettings(parsed);
-    } else {
-      setSettings(INITIAL_STORE_SETTINGS);
-    }
+    setSettings(savedSettings ? JSON.parse(savedSettings) : INITIAL_STORE_SETTINGS);
   }
 
-  // Helper mappings
+  // Supabase Mappers
   function mapSupabaseProduct(row: any): Product {
     return {
       id: row.id,
@@ -198,39 +205,76 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     };
   }
 
-  // Admin Auth Methods
+  // Secure Admin Auth Methods (Strict Supabase Authentication & Role Verification)
   async function loginAdmin(email: string, pass: string): Promise<{ success: boolean; error?: string }> {
-    if (isSupabaseConfigured && supabase) {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
+    if (!isSupabaseConfigured || !supabase) {
+      return {
+        success: false,
+        error: 'Authentication backend is not configured. Please add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your environment variables and configure an admin user.'
+      };
+    }
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password: pass
+      });
+
       if (error) {
         return { success: false, error: error.message };
       }
-      setIsAdminAuthenticated(true);
-      setAdminEmail(data.user?.email || email);
-      return { success: true };
-    } else {
-      // Local demo password check: accept 'admin@renstone.store' / 'renstone2026' or demo credentials
-      if (email.trim() && pass.length >= 6) {
-        setIsAdminAuthenticated(true);
-        setAdminEmail(email.trim());
-        localStorage.setItem(LOCAL_STORAGE_ADMIN_AUTH, JSON.stringify({ isAuth: true, email: email.trim() }));
-        return { success: true };
+
+      if (!data.user) {
+        return { success: false, error: 'Authentication failed. No user record returned.' };
       }
-      return { success: false, error: 'Password must be at least 6 characters.' };
+
+      // Verify that the authenticated user is in public.admin_users
+      const { data: adminRow, error: adminErr } = await supabase
+        .from('admin_users')
+        .select('role')
+        .eq('id', data.user.id)
+        .single();
+
+      if (adminErr || !adminRow || (adminRow.role !== 'admin' && adminRow.role !== 'superadmin')) {
+        await supabase.auth.signOut();
+        setIsAdminAuthenticated(false);
+        setAdminEmail(null);
+        return {
+          success: false,
+          error: 'Access denied: Your account is authenticated, but does not have administrator privileges for this store.'
+        };
+      }
+
+      setIsAdminAuthenticated(true);
+      setAdminEmail(data.user.email || email.trim());
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err.message || 'An unexpected authentication error occurred.' };
     }
   }
 
   async function logoutAdmin() {
     if (isSupabaseConfigured && supabase) {
-      await supabase.auth.signOut();
+      try {
+        await supabase.auth.signOut();
+      } catch (err) {
+        console.error('Logout error:', err);
+      }
     }
     setIsAdminAuthenticated(false);
     setAdminEmail(null);
-    localStorage.removeItem(LOCAL_STORAGE_ADMIN_AUTH);
   }
 
-  // Product CRUD
+  // Guard for protected admin actions
+  function assertAdmin() {
+    if (!isAdminAuthenticated) {
+      throw new Error('Unauthorized: Administrative authentication required.');
+    }
+  }
+
+  // Product CRUD (Protected)
   async function addProduct(prodData: Omit<Product, 'id' | 'createdAt'>): Promise<Product> {
+    assertAdmin();
     const newId = 'ren-' + Date.now().toString(36);
     const newProduct: Product = {
       ...prodData,
@@ -275,6 +319,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }
 
   async function updateProduct(id: string, updates: Partial<Product>) {
+    assertAdmin();
     if (isSupabaseConfigured && supabase) {
       try {
         await supabase.from('products').update({
@@ -308,6 +353,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }
 
   async function deleteProduct(id: string) {
+    assertAdmin();
     if (isSupabaseConfigured && supabase) {
       try {
         await supabase.from('products').delete().eq('id', id);
@@ -324,6 +370,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }
 
   async function duplicateProduct(id: string): Promise<Product> {
+    assertAdmin();
     const target = products.find(p => p.id === id);
     if (!target) throw new Error('Product not found');
 
@@ -338,13 +385,15 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }
 
   async function togglePublish(id: string) {
+    assertAdmin();
     const prod = products.find(p => p.id === id);
     if (!prod) return;
     await updateProduct(id, { isPublished: !prod.isPublished });
   }
 
-  // Category CRUD
+  // Category CRUD (Protected)
   async function addCategory(catData: Omit<Category, 'id'>): Promise<Category> {
+    assertAdmin();
     const newCategory: Category = {
       ...catData,
       id: 'cat-' + Date.now().toString(36)
@@ -374,6 +423,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }
 
   async function updateCategory(id: string, updates: Partial<Category>) {
+    assertAdmin();
     if (isSupabaseConfigured && supabase) {
       try {
         await supabase.from('categories').update(updates).eq('id', id);
@@ -390,6 +440,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }
 
   async function deleteCategory(id: string) {
+    assertAdmin();
     if (isSupabaseConfigured && supabase) {
       try {
         await supabase.from('categories').delete().eq('id', id);
@@ -405,7 +456,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     });
   }
 
-  // Orders
+  // Orders (Customer Checkout is Public, Status/Internal Notes Updates are Protected)
   async function createOrder(orderData: Omit<Order, 'id' | 'orderReference' | 'createdAt' | 'status'>): Promise<Order> {
     const ref = generateOrderReference();
     const newOrder: Order = {
@@ -435,7 +486,6 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
         if (!ordErr && ordRow) {
           newOrder.id = ordRow.id;
-          // Insert order items
           const itemInserts = newOrder.items.map(item => ({
             order_id: ordRow.id,
             product_id: item.productId,
@@ -463,6 +513,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }
 
   async function updateOrderStatus(orderId: string, status: OrderStatus, internalNotes?: string) {
+    assertAdmin();
     if (isSupabaseConfigured && supabase) {
       try {
         await supabase.from('orders').update({
@@ -487,8 +538,9 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     });
   }
 
-  // Store Settings
+  // Store Settings (Protected)
   async function updateSettings(newSettings: Partial<StoreSettings>) {
+    assertAdmin();
     const updated = { ...settings, ...newSettings };
 
     if (isSupabaseConfigured && supabase) {
@@ -545,10 +597,6 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const getProductSalesCount = (productId: string): number => {
-    const prod = products.find(p => p.id === productId);
-    if (prod && typeof prod.verifiedSalesCount === 'number') {
-      return prod.verifiedSalesCount;
-    }
     return orders
       .filter(o => o.status !== 'Cancelled')
       .reduce((sum, ord) => {

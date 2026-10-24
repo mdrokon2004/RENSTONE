@@ -5,135 +5,88 @@
 
 ---
 
-## 🌟 Key Features
+## 🌐 Official Links
 
-- **Mixed Light & Dark Luxury Aesthetic**: Warm ivory & crisp white backgrounds for product viewing paired with deep obsidian black (`#111111`) and champagne gold (`#C5A46D`) editorial sections.
-- **Reference-Inspired Product Detail Experience**: Multi-angle image showcase with fullscreen lightbox zoom, variant selector (sizes, chain lengths, finishes), dynamic stock validation, and technical accordion breakdowns.
-- **Direct Bangladesh Ordering Flow**:
-  - Doorstep inspection notice with Cash on Delivery (COD) as standard.
-  - Automatic calculation of shipping: Inside Dhaka (৳80) vs. Outside Dhaka (৳150), and complimentary express delivery on orders over ৳5,000.
-  - 1-click **WhatsApp Concierge Ordering** (`https://wa.me/...`) with preformatted, encoded order summaries.
-  - Facebook Messenger conversation routing.
-  - One-click copyable order summary fallback.
-  - Duplicate-submission prevention and unique order reference generation (`REN-YYYY-XXXXXX`).
-- **Protected `/admin` Control Center**:
-  - Real-time KPIs: Recorded volume (BDT), total orders, active inventory, and low-stock alerts.
-  - Full Product CRUD: Create, edit, duplicate, publish/unpublish, and delete pieces.
-  - Photography management, variant options editor, and technical specifications builder.
-  - Orders Manager: Inspect customer details, filter by status (`Pending`, `Contacted`, `Confirmed`, `Processing`, `Shipped`, `Delivered`, `Cancelled`), and save internal dispatch notes.
-  - Dynamic Store Settings: Update official WhatsApp number, Messenger URL, delivery fees, announcement banner, and contact info with instant storefront effect.
-- **Dual-Mode Persistence Architecture**:
-  - **Local Demo Mode**: Seamless offline `localStorage` fallback with 12 pre-seeded luxury pieces. You can test admin changes and cart requests immediately without entering any API keys!
-  - **Supabase Cloud Mode**: Direct connection to PostgreSQL database, Supabase Auth, Row Level Security (RLS) policies, and Supabase Storage for product images.
+- **Live Public Website**: [https://renstone.vercel.app](https://renstone.vercel.app)
+- **GitHub Repository**: [https://github.com/mdrokon2004/RENSTONE](https://github.com/mdrokon2004/RENSTONE)
+- **Administrator Portal**: [https://renstone.vercel.app/admin/login](https://renstone.vercel.app/admin/login)
+- **Official WhatsApp Concierge**: [+880 1322-177107](https://wa.me/8801322177107)
+- **Official Facebook Page**: [facebook.com/profile.php?id=61594618265976](https://www.facebook.com/profile.php?id=61594618265976)
+- **Official Email**: `renstoneofficialbd@gmail.com`
 
 ---
 
-## 🚀 Step 1: Running Locally
+## 🌟 Key Features
 
-1. Open your terminal in `G:\RENSTONE`:
+- **Editorial Luxury Storefront**: Warm ivory & crisp white palettes for clear product inspection paired with obsidian black (`#111111`) and champagne gold (`#C5A46D`) editorial accents.
+- **Reference-Grade Product Details**: Multi-angle photography gallery with fullscreen lightbox zoom, variant selector (sizes, finishes), real-time stock checks, and technical specifications accordion.
+- **100% Genuine Activity Counter**: Live visitor indicator (`"N person watching this product"`) based strictly on genuine page visits. Order counts reflect only verified database orders.
+- **Seamless Bangladesh Ordering Flow**:
+  - Direct WhatsApp Concierge ordering (`https://wa.me/8801322177107`) with pre-encoded product title, variant, delivery address, and reference code.
+  - Floating WhatsApp chat widget for instant customer support.
+  - Automated shipping rates: Inside Dhaka (৳80) vs. Outside Dhaka (৳150), and complimentary express delivery on orders over ৳5,000.
+  - Cash on Delivery (COD) standard with doorstep inspection notices.
+- **Protected Administrator Control Center (`/admin`)**:
+  - **Strict Server-Side Authentication**: Access is guarded strictly by Supabase Authentication and database-level authorization. Unauthenticated visitors cannot access admin views or data.
+  - **Row Level Security (RLS)**: Public visitors have read-only access to published products; only verified members of `public.admin_users` can create/edit products or view customer orders.
+  - **Catalog & Orders Management**: Full product CRUD, image galleries, category management, order status workflow (`Pending` → `Processing` → `Shipped` → `Delivered`), and store settings controls.
+
+---
+
+## 🚀 Local Development
+
+1. Clone or navigate to the repository directory:
    ```bash
    cd G:\RENSTONE
    ```
-2. Install dependencies (already installed):
+2. Install dependencies:
    ```bash
    npm install
    ```
-3. Start the Vite development server:
+3. Start the local development server:
    ```bash
    npm run dev
    ```
 4. Open [http://localhost:5173](http://localhost:5173) in your browser.
-5. Access the Admin Portal at [http://localhost:5173/admin/login](http://localhost:5173/admin/login).
-   - **Demo Admin Email**: `admin@renstone.store`
-   - **Demo Admin Password**: `renstone2026`
 
 ---
 
-## 🗄️ Step 2: Creating and Configuring a Free Supabase Project
+## 🔐 Production Administrator Setup & Security
 
-When you are ready to switch from local storage to persistent cloud database and storage:
+Administrative accounts are **never hardcoded** and cannot be registered publicly through the website. They must be provisioned securely directly in your database:
 
-1. Go to [https://supabase.com](https://supabase.com) and create a free account.
-2. Click **New Project** and name it `RENSTONE` (choose `Singapore` or nearest region to Bangladesh for optimal latency).
-3. In the left navigation, click **SQL Editor**.
-4. Open the SQL file provided in this repository at `supabase/migrations/20260101000000_init_renstone.sql`.
-5. Copy the entire script, paste it into the Supabase SQL Editor, and click **Run**.
-   - This creates all normalized tables (`products`, `categories`, `product_variants`, `orders`, `order_items`, `store_settings`, `admin_users`).
-   - Configures strict **Row Level Security (RLS)** policies ensuring public visitors cannot view private orders or customer data.
-   - Sets up the `product-images` storage bucket.
-6. Retrieve your API credentials:
-   - Go to **Project Settings** > **API**.
-   - Copy your **Project URL** and your **anon / public key**.
-7. Create a file named `.env.local` inside `G:\RENSTONE` (or copy from `.env.example`):
-   ```env
-   VITE_SUPABASE_URL=https://your-project-ref.supabase.co
-   VITE_SUPABASE_ANON_KEY=eyJhbGciOi...your-anon-key
-   ```
-8. Restart your dev server (`npm run dev`). The admin header will now display:  
-   **"Storage Provider: Supabase Live Cloud"**.
+### 1. Database Schema & Row Level Security
+Execute the provided SQL schema in your Supabase SQL Editor:
+- File location: `supabase/migrations/20260101000000_init_renstone.sql`
+- This script enables Row Level Security (RLS) across all tables (`products`, `orders`, `categories`, `store_settings`, `admin_users`).
+- Only authenticated users with an authorized record in `public.admin_users` have write permissions.
 
----
-
-## 🔐 Step 3: Creating Your First Secure Admin Account
-
-1. In your Supabase Dashboard, go to **Authentication** > **Users**.
-2. Click **Add User** > **Create User**.
-3. Enter your private admin email (e.g. `owner@renstone.store`) and a strong password.
-4. Go to the **SQL Editor** in Supabase and grant that user admin status by linking their ID:
+### 2. Provisioning an Administrator Account
+1. Open your [Supabase Dashboard](https://supabase.com/dashboard) and navigate to **Authentication** > **Users**.
+2. Click **Add User** > **Create User** and enter your administrator email and a strong private password.
+3. In the Supabase **SQL Editor**, grant administrative privileges to this user ID:
    ```sql
    INSERT INTO public.admin_users (id, email, role)
    SELECT id, email, 'admin'
    FROM auth.users
-   WHERE email = 'owner@renstone.store';
+   WHERE email = 'your-admin-email@yourdomain.com';
    ```
-5. You can now log into your live store's `/admin/login` using your real Supabase credentials!
-
----
-
-## 🐙 Step 4: Pushing the Code to GitHub
-
-1. Initialize Git in `G:\RENSTONE` (if not already initialized):
-   ```bash
-   git init
-   git branch -M main
-   ```
-2. Add all files (the included `.gitignore` protects `.env` and `node_modules`):
-   ```bash
-   git add .
-   git commit -m "feat: initial commit of RENSTONE luxury accessories platform"
-   ```
-3. Create a new repository on [https://github.com](https://github.com) named `renstone`.
-4. Link and push to GitHub:
-   ```bash
-   git remote add origin https://github.com/<YOUR_GITHUB_USERNAME>/renstone.git
-   git push -u origin main
-   ```
-
----
-
-## ☁️ Step 5: Deploying Through Vercel (Free Subdomain)
-
-1. Go to [https://vercel.com](https://vercel.com) and sign in with your GitHub account.
-2. Click **Add New...** > **Project**.
-3. Import your `renstone` repository.
-4. In the **Environment Variables** section, add:
+4. Add your public Supabase keys to your hosting platform's Environment Variables (e.g., in Vercel):
    - `VITE_SUPABASE_URL` = `https://your-project-ref.supabase.co`
-   - `VITE_SUPABASE_ANON_KEY` = `your-anon-key`
-   *(Or leave them empty if you want to deploy the local demo mode first)*.
-5. Click **Deploy**.
-6. Within 60 seconds, your site is live at your free Vercel subdomain:  
-   `https://renstone.vercel.app` (or similar).
-7. Thanks to `vercel.json`, single-page routing is fully configured (`/products/:slug`, `/shop`, `/admin`, etc. load seamlessly on refresh).
+   - `VITE_SUPABASE_ANON_KEY` = `your-public-anon-key`
+5. Log into the live portal at [https://renstone.vercel.app/admin/login](https://renstone.vercel.app/admin/login) using your provisioned credentials.
+
+> [!IMPORTANT]
+> **Never commit `.env` or `.env.local` files to GitHub**. Never place your Supabase `service_role` key in frontend code or in variables prefixed with `VITE_`. Service-role keys bypass all Row Level Security and must only be used in secure server environments.
 
 ---
 
-## ⚡ Step 6: Updating the Live Website Without Pushing New Code
+## ☁️ Deployment Architecture
 
-Once connected to Supabase:
-- Log into `https://your-domain.vercel.app/admin`.
-- Add a new timepiece, edit an existing ring price, or toggle the announcement bar.
-- Changes are written directly to PostgreSQL.
-- **The live public website updates immediately for all visitors with zero code changes, no GitHub commits, and no Vercel redeployments!**
+- **Hosting Provider**: Vercel (Edge Network)
+- **Live URL**: [https://renstone.vercel.app](https://renstone.vercel.app)
+- **SPA Routing**: Configured via `vercel.json` rewrites and `public/_redirects`.
+- **Database & Auth**: Supabase PostgreSQL with Row Level Security.
 
 ---
 
@@ -141,25 +94,28 @@ Once connected to Supabase:
 
 ```
 G:\RENSTONE\
-├── .env.example              # Template environment configuration
-├── .gitignore                # Clean Git protection rules
+├── .env.example              # Template environment configuration (no secrets)
+├── .gitignore                # Secret protection rules
 ├── vercel.json               # SPA rewrite rules for Vercel
-├── vite.config.ts            # Fast Vite tooling
-├── tailwind.config.js        # Obsidian, champagne, ivory color system
+├── vite.config.ts            # Vite tooling configuration
+├── tailwind.config.js        # Obsidian, champagne, and ivory color system
 ├── supabase/
 │   └── migrations/
-│       └── 20260101000000_init_renstone.sql # Full schema, RLS & storage
+│       └── 20260101000000_init_renstone.sql # Complete schema, RLS & storage policies
+├── public/
+│   ├── _redirects            # Cloudflare Pages SPA rewrite rules
+│   └── renstone-logo.png     # Official high-resolution luxury logo
 ├── src/
 │   ├── types/index.ts        # Fully typed data models
-│   ├── data/mockProducts.ts  # 12 pre-seeded luxury accessories
+│   ├── data/mockProducts.ts  # Default catalog data
 │   ├── context/
-│   │   ├── StoreContext.tsx  # Dual-mode Supabase/LocalStorage CRUD
-│   │   ├── CartContext.tsx   # Persistent cart drawer & subtotal
-│   │   └── WishlistContext.tsx # Wishlist & recently viewed tracking
+│   │   ├── StoreContext.tsx  # Server-side Supabase authentication & authorization
+│   │   ├── CartContext.tsx   # Shopping bag state & checkout calculation
+│   │   └── WishlistContext.tsx # Wishlist state
 │   ├── lib/
 │   │   ├── supabase.ts       # Supabase client initializer
-│   │   └── formatters.ts     # BDT currency & phone sanitizers
-│   ├── components/           # Modular luxury UI components
-│   └── pages/                # Public storefront & /admin pages
+│   │   └── formatters.ts     # BDT currency & phone number formatting
+│   ├── components/           # Luxury UI components & floating WhatsApp concierge
+│   └── pages/                # Storefront & protected /admin portal
 └── README.md
 ```
