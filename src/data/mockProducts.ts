@@ -1,4 +1,4 @@
-﻿import { Category, Product, StoreSettings } from '../types';
+import { Category, Product, StoreSettings } from '../types';
 
 export const INITIAL_CATEGORIES: Category[] = [
   {
@@ -46,16 +46,16 @@ export const INITIAL_CATEGORIES: Category[] = [
 export const INITIAL_STORE_SETTINGS: StoreSettings = {
   storeName: 'RENSTONE',
   tagline: 'Timeless Style. Distinctive Details.',
-  whatsappNumber: '8801700000000', // Bangladeshi international format
+  whatsappNumber: '8801322177107', // Official RENSTONE WhatsApp Concierge
   messengerUrl: 'https://m.me/renstone.official',
   dhakaDeliveryFee: 80,
   outsideDhakaDeliveryFee: 150,
   freeDeliveryThreshold: 5000,
   announcementText: 'Complimentary Express Shipping on orders over ৳5,000 across Bangladesh',
   announcementEnabled: true,
-  contactEmail: 'concierge@renstone.store',
-  contactPhone: '+880 1700-000000',
-  contactAddress: 'Gulshan 2, Dhaka 1212, Bangladesh'
+  contactEmail: '',
+  contactPhone: '+880 1322-177107',
+  contactAddress: 'Dhaka, Bangladesh (100% Online Exclusive Boutique)'
 };
 
 export const INITIAL_PRODUCTS: Product[] = [

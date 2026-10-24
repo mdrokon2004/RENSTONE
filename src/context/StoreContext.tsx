@@ -1,4 +1,4 @@
-﻿import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product, Category, Order, StoreSettings, OrderStatus } from '../types';
 import { INITIAL_PRODUCTS, INITIAL_CATEGORIES, INITIAL_STORE_SETTINGS } from '../data/mockProducts';
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
@@ -135,7 +135,17 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setProducts(savedProds ? JSON.parse(savedProds) : INITIAL_PRODUCTS);
     setCategories(savedCats ? JSON.parse(savedCats) : INITIAL_CATEGORIES);
     setOrders(savedOrders ? JSON.parse(savedOrders) : []);
-    setSettings(savedSettings ? JSON.parse(savedSettings) : INITIAL_STORE_SETTINGS);
+        if (savedSettings) {
+      const parsed = JSON.parse(savedSettings);
+      // Ensure real WhatsApp number and online store address are applied
+      parsed.whatsappNumber = '8801322177107';
+      parsed.contactPhone = '+880 1322-177107';
+      parsed.contactAddress = 'Dhaka, Bangladesh (100% Online Exclusive Boutique)';
+      parsed.contactEmail = '';
+      setSettings(parsed);
+    } else {
+      setSettings(INITIAL_STORE_SETTINGS);
+    }
   }
 
   // Helper mappings

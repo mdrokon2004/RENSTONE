@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Save, Check, ShieldCheck, MessageSquare, Truck, Bell } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 
@@ -112,10 +112,10 @@ export const AdminSettings: React.FC = () => {
                 required
                 value={whatsappNumber}
                 onChange={(e) => setWhatsappNumber(e.target.value)}
-                placeholder="8801700000000"
+                placeholder="8801322177107"
                 className="w-full bg-ivory border border-black/15 focus:border-champagne rounded px-3 py-2 outline-none font-mono"
               />
-              <p className="text-[10px] text-obsidian/50 mt-1">Example: 8801712345678 (Used for direct click-to-chat order links)</p>
+              <p className="text-[10px] text-obsidian/50 mt-1">Configured: 8801322177107 (Direct click-to-chat WhatsApp link)</p>
             </div>
 
             <div>
@@ -238,7 +238,7 @@ export const AdminSettings: React.FC = () => {
           </div>
 
           <div>
-            <label className="block uppercase tracking-wider font-semibold mb-1">Physical Showroom / Studio Address</label>
+            <label className="block uppercase tracking-wider font-semibold mb-1">Operating Location (Online-Exclusive Boutique)</label>
             <input
               type="text"
               value={contactAddress}

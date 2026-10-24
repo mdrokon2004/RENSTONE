@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ShieldCheck, Truck, Clock, RefreshCw, Send, MessageSquare, Phone, Mail, MapPin } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
@@ -140,46 +140,33 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Direct Contact & Newsletter */}
+          {/* Direct WhatsApp Concierge & Store Details */}
           <div className="space-y-4">
             <h4 className="text-xs uppercase tracking-widest text-champagne font-bold mb-2">
-              Private Circle
+              WhatsApp VIP Concierge
             </h4>
             <p className="text-xs text-ivory/70 leading-relaxed">
-              Receive private invitations to limited-edition drops and styling previews.
+              We are a 100% online-exclusive accessories boutique. We do not operate offline physical showrooms; all pieces are delivered with doorstep inspection nationwide.
             </p>
 
-            {newsletterSubmitted ? (
-              <div className="p-3 bg-champagne/10 border border-champagne text-champagne text-xs rounded">
-                Thank you for joining the RENSTONE circle.
-              </div>
-            ) : (
-              <form onSubmit={handleNewsletterSubmit} className="flex flex-col gap-2">
-                <input
-                  type="email"
-                  value={newsletterEmail}
-                  onChange={(e) => setNewsletterEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  required
-                  className="bg-obsidian-surface border border-white/10 px-3 py-2 text-xs text-ivory rounded focus:border-champagne outline-none"
-                />
-                <button
-                  type="submit"
-                  className="w-full py-2 bg-obsidian-surface hover:bg-champagne hover:text-obsidian border border-champagne text-champagne text-xs uppercase tracking-widest font-semibold rounded transition-colors"
-                >
-                  Join Circle
-                </button>
-              </form>
-            )}
+            <a
+              href={`https://wa.me/${settings.whatsappNumber}?text=Hello%20RENSTONE%20team,%20I%20would%20like%20to%20join%20the%20VIP%20WhatsApp%20Club%20for%20exclusive%20drops`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 bg-[#25D366] hover:bg-[#20BD5A] text-white font-bold text-xs uppercase tracking-wider rounded transition-colors shadow"
+            >
+              <MessageSquare className="w-4 h-4 fill-white" />
+              <span>Connect on WhatsApp</span>
+            </a>
 
-            <div className="pt-2 text-[11px] text-ivory/60 space-y-1">
-              <div className="flex items-center gap-1.5">
-                <MapPin className="w-3 h-3 text-champagne" />
-                <span>{settings.contactAddress}</span>
+            <div className="pt-2 text-[11px] text-ivory/60 space-y-2 border-t border-white/10">
+              <div className="flex items-start gap-1.5">
+                <MapPin className="w-3.5 h-3.5 text-champagne flex-shrink-0 mt-0.5" />
+                <span>Dhaka, Bangladesh • 100% Online Exclusive Boutique</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <Mail className="w-3 h-3 text-champagne" />
-                <span>{settings.contactEmail}</span>
+                <Phone className="w-3.5 h-3.5 text-champagne flex-shrink-0" />
+                <span className="font-semibold text-ivory">{settings.contactPhone}</span>
               </div>
             </div>
           </div>

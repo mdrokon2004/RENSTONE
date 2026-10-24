@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { 
   ShieldCheck, Truck, Clock, RefreshCw, MessageSquare, ShoppingBag, 
@@ -11,6 +11,7 @@ import { ProductGallery } from '../components/product/ProductGallery';
 import { VariantSelector } from '../components/product/VariantSelector';
 import { StickyPurchaseBar } from '../components/product/StickyPurchaseBar';
 import { ProductCard } from '../components/product/ProductCard';
+import { LiveVisitorBadge } from '../components/product/LiveVisitorBadge';
 import { formatBDT, calculateDiscount, cleanPhoneForWhatsApp } from '../lib/formatters';
 import { ProductVariantOption } from '../types';
 
@@ -171,6 +172,9 @@ export const ProductDetail: React.FC = () => {
               </span>
             )}
           </div>
+
+          {/* Real-time Live Visitors & Demand Pulse */}
+          <LiveVisitorBadge productId={product.id} category={product.category} />
 
           {/* Key Product Highlights (Inspired by reference) */}
           {product.highlights && product.highlights.length > 0 && (
