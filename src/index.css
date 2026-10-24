@@ -1,0 +1,80 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+  
+  body {
+    background-color: #F5F2EC;
+    color: #111111;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: #C5A46D;
+    color: #FFFFFF;
+  }
+}
+
+/* Custom Scrollbar for Luxury Feel */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F5F2EC;
+}
+::-webkit-scrollbar-thumb {
+  background: #C5A46D;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #A6844E;
+}
+
+/* Utility Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Luxury Grain & Texture Overlay */
+.luxury-gold-border {
+  border: 1px solid rgba(197, 164, 109, 0.35);
+}
+
+.luxury-gold-border-subtle {
+  border: 1px solid rgba(197, 164, 109, 0.2);
+}
+
+.luxury-gradient-dark {
+  background: linear-gradient(180deg, #161616 0%, #0D0D0D 100%);
+}
+
+.champagne-glow {
+  box-shadow: 0 0 25px -5px rgba(197, 164, 109, 0.3);
+}
+
+/* Hide spin buttons on number inputs */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
